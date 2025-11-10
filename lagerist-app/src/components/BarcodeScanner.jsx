@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { BrowserMultiFormatReader } from '@zxing/library';
+import { removeLeadingZeros } from '../utils/articleUtils';
 
-export default function BarcodeScanner({ onScan, isActive }) {
+export default function BarcodeScanner({ onScan, onClose }) {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const [error, setError] = useState(null);
@@ -11,17 +12,6 @@ export default function BarcodeScanner({ onScan, isActive }) {
   const codeReaderRef = useRef(null);
 
   useEffect(() => {
-    if (!isActive) {
-      // Stop scanning when not active
-      if (codeReaderRef.current) {
-        codeReaderRef.current.reset();
-      }
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-        streamRef.current = null;
-      }
-      return;
-    }
 
     const codeReader = new BrowserMultiFormatReader();
     codeReaderRef.current = codeReader;
@@ -68,7 +58,9 @@ export default function BarcodeScanner({ onScan, isActive }) {
           (result, err) => {
             if (result) {
               const scannedText = result.getText();
-              onScan(scannedText);
+              // Remove leading zeros from scanned barcode
+              const normalizedText = removeLeadingZeros(scannedText);
+              onScan(normalizedText);
               // Stop scanning after successful scan
               if (streamRef.current) {
                 streamRef.current.getTracks().forEach(track => track.stop());
@@ -121,7 +113,7 @@ export default function BarcodeScanner({ onScan, isActive }) {
       }
       setTorchEnabled(false);
     };
-  }, [isActive, onScan]);
+  }, [onScan]);
 
   const toggleTorch = async () => {
     if (!streamRef.current) return;
@@ -148,13 +140,19 @@ export default function BarcodeScanner({ onScan, isActive }) {
     }
   };
 
-  if (!isActive) {
-    return null;
-  }
-
   return (
     <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center">
       <div className="w-full h-full flex flex-col">
+        {/* Close Button */}
+        <div className="absolute top-4 right-4 z-10">
+          <button
+            onClick={onClose}
+            className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-lg"
+          >
+            ✕ Schließen
+          </button>
+        </div>
+
         <div className="flex-1 relative">
           <video
             ref={videoRef}

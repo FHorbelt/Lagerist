@@ -125,10 +125,14 @@ lagerist-app/
 │   │   ├── BarcodeScanner.jsx    # Barcode-Scanner-Komponente
 │   │   ├── EntryForm.jsx          # Eingabeformular
 │   │   ├── MaterialsList.jsx      # Materialliste
-│   │   └── ExportButtons.jsx      # Export-Funktionen
+│   │   ├── ExportButtons.jsx      # Export-Funktionen
+│   │   └── JobManager.jsx         # Auftragslisten-Verwaltung
 │   ├── App.jsx                     # Hauptkomponente
 │   ├── main.jsx                    # React-Einstiegspunkt
 │   └── index.css                   # Tailwind CSS
+├── public/
+│   └── CNAME                       # Custom Domain für GitHub Pages
+├── dist/                           # Build-Output (generiert)
 ├── package.json
 ├── tailwind.config.js
 ├── vite.config.js
@@ -144,6 +148,7 @@ lagerist-app/
 - **jsPDF**: PDF-Generierung
 - **jspdf-autotable**: Tabellen für PDFs
 - **LocalStorage**: Persistente Datenspeicherung
+- **gh-pages**: Automatisches Deployment auf GitHub Pages
 
 ## Tipps & Troubleshooting
 
@@ -172,7 +177,9 @@ lagerist-app/
 - Löschen Sie nicht den Browser-Cache
 - Exportieren Sie regelmäßig wichtige Daten
 
-## Production Build
+## Production Build & Deployment
+
+### Lokaler Build
 
 Für einen Production Build:
 
@@ -187,6 +194,51 @@ Um den Build lokal zu testen:
 ```bash
 npm run preview
 ```
+
+### Deployment auf GitHub Pages
+
+Die App ist live unter: **https://lagerist.hr-eventtechnik.de**
+
+#### Erstmaliges Setup
+
+1. **DNS-Konfiguration** (bereits erledigt):
+   - Bei deinem DNS-Provider einen CNAME Record erstellen:
+   ```
+   Type:  CNAME
+   Name:  lagerist
+   Value: FHorbelt.github.io
+   ```
+   - DNS-Änderungen können bis zu 48 Stunden dauern
+
+2. **CNAME-Datei** (bereits konfiguriert):
+   - Die Datei `public/CNAME` enthält: `lagerist.hr-eventtechnik.de`
+   - Diese wird automatisch beim Build nach `dist/` kopiert
+
+3. **GitHub Pages aktivieren** (bereits erledigt):
+   - Repository → Settings → Pages
+   - Source: `gh-pages` Branch
+   - Custom domain: `lagerist.hr-eventtechnik.de`
+   - HTTPS aktivieren (automatisch nach DNS-Propagation)
+
+#### Zukünftige Deployments
+
+Nach Änderungen am Code einfach deployen mit:
+
+```bash
+npm run deploy
+```
+
+Dieser Befehl führt automatisch aus:
+1. `npm run build` - Baut die App neu
+2. `gh-pages -d dist` - Pusht den `dist/` Ordner zum `gh-pages` Branch
+
+**Wichtig**: Immer vom `lagerist-app/` Verzeichnis ausführen!
+
+#### Deployment überprüfen
+
+- **GitHub Pages Status**: https://github.com/FHorbelt/Lagerist/deployments
+- **Live App**: https://lagerist.hr-eventtechnik.de
+- **Fallback URL**: https://FHorbelt.github.io/Lagerist
 
 ## Support
 
