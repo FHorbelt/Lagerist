@@ -9,7 +9,7 @@ Eine mobilfreundliche Web-App zur Erfassung von Materialentnahmen mit Barcode-Sc
 - **Formular für Materialentnahmen**:
   - Menge (numerisch mit Dezimalstellen)
   - Einheit (Stück oder Meter)
-  - Lagerort (D10 oder D90)
+  - Lagerort (Frei gestaltbar)
 - **Materialübersicht**: Tabellarische Darstellung aller erfassten Entnahmen
 - **Export-Funktionen**:
   - CSV-Export (für Excel)
